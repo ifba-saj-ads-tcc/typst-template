@@ -1,6 +1,7 @@
-// assets/anexos/portaria.typ — Conteúdo do anexo A (documento de terceiros).
+// pos-textuais/anexo-a-portaria.typ — Anexo A. Anexo = documento de terceiros, não elaborado
+// pelo aluno. Documentos digitalizados podem entrar como #image("../assets/...pdf").
 
-= Portaria de Criação do Curso
+= Portaria de criação do curso <anx-portaria>
 
 Transcrição parcial da portaria de autorização do curso de Análise e Desenvolvimento de Sistemas do campus Santo Antônio de Jesus do IFBA.
 

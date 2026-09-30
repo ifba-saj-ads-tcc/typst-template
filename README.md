@@ -300,36 +300,52 @@ Recompile após trocar: `typst compile main.typ` ou aguarde o preview do Tinymis
 
 ```
 .
-├── main.typ                 # ← arquivo de entrada e exemplo — edite aqui
-├── main.pdf                 # PDF compilado do exemplo
-├── referencias.bib
-├── data/
-│   └── resultados.csv
-├── assets/
-│   ├── algoritmos/busca.alg
-│   ├── anexos/portaria.typ
-│   ├── apendices/roteiro.typ
-│   ├── codigos/{Estoque.java,Produto.java}
-│   ├── diagramas/{arquitetura.typ,diagramauml.puml,diagramauml.svg}
-│   ├── graficos/{barras.typ,pizza.typ}
-│   ├── imagens/logo.svg
-│   ├── ficha-exemplo.{pdf,typ}
-│   └── folha-aprovacao-exemplo.{pdf,typ}
-├── ifbasaj-tcc/
-│   ├── imports.typ          # funções de formatação usadas pelo template
-│   ├── layout.typ           # página, tipografia, headings ABNT
-│   ├── pre-textual.typ      # template() — capa, folha de rosto, listas, sumário
-│   ├── elements.typ         # figura, quadro, tabela, fonte
-│   ├── bibliography.typ     # cite, prose, references, citações
-│   ├── code-algo.typ        # codigo, algoritmo (codly)
-│   ├── diagrams.typ         # diagram (cetz)
-│   ├── charts.typ           # gráficos (cetz-plot)
-│   ├── gloss.typ            # abbrev, gloss, glossario
-│   ├── annexes.typ          # apendice, anexo
-│   ├── editor-tools.typ     # equacao
-│   └── config.typ           # get-autor, get-titulo, ...
-└── .vscode/
-    └── extensions.json      # recomenda Tinymist + PlantUML
+├── main.typ                 # ← dados do trabalho + ordem dos includes (não tem texto)
+├── referencias.bib          # exemplos de cada tipo BibTeX suportado
+├── pre-textuais/            # resumo, abstract, dedicatória, agradecimentos, epígrafe, errata
+├── capitulos/               # um arquivo por capítulo, com #orientacao[...] e exemplos
+│   ├── 01-introducao.typ            # siglas, glossário, citações, nota de rodapé, objetivos
+│   ├── 02-referencial-teorico.typ   # todas as formas de citação, quadro comparativo
+│   ├── 03-metodologia.typ           # diagrama cetz, quadro de ferramentas, equações
+│   ├── 04-desenvolvimento.typ       # requisitos, arquitetura, UML, sourcecraft, código, algoritmo
+│   ├── 05-resultados.typ            # tabela CSV, tabela com células mescladas, gráficos
+│   └── 06-consideracoes-finais.typ
+├── pos-textuais/            # apêndices (material do aluno) e anexos (de terceiros)
+├── data/resultados.csv
+├── assets/                  # algoritmos, códigos, diagramas, gráficos, imagens, ficha
+└── ifbasaj-tcc/             # biblioteca do template (não edite)
+```
+
+Cada capítulo importa a biblioteca com `#import "../ifbasaj-tcc/imports.typ": *` e usa caminhos
+relativos ao próprio arquivo (`image("../assets/...")`). As caixas `#orientacao[...]` resumem o que
+a seção DEVE / NÃO DEVE conter; apague-as ao escrever a seção.
+
+### Editando um capítulo sozinho
+
+Cada arquivo de `capitulos/` começa com:
+
+```typst
+#import "../ifbasaj-tcc/imports.typ": *
+#show: capitulo.with(numero: 3)
+```
+
+Com isso, o capítulo pode ser aberto sozinho no preview de qualquer editor (VS Code, VSCodium,
+typst.app): recebe o estilo ABNT, a numeração do capítulo (`numero`) e as citações de
+`referencias.bib`. Dentro do `main.typ`, o `capitulo` não faz nada. No preview isolado:
+
+- referências a rótulos de outros capítulos aparecem como ‹rótulo›, em vermelho;
+- figuras e tabelas são numeradas a partir de 1, e a fonte automática mostra "(ano)";
+- siglas já definidas em outro capítulo aparecem só como sigla.
+
+O PDF final é sempre o do `main.typ`. Ao criar um capítulo novo, copie as duas linhas acima e
+ajuste `numero`.
+
+A raiz do projeto precisa ser a pasta do TCC (a que contém `main.typ`), porque os capítulos
+usam caminhos `../`. No editor, abra a pasta do TCC (ou uma pasta que a contenha); na linha de
+comando, passe a raiz:
+
+```powershell
+typst watch --root . capitulos/01-introducao.typ
 ```
 
 ## FAQ / Troubleshooting
@@ -339,6 +355,8 @@ Recompile após trocar: `typst compile main.typ` ou aguarde o preview do Tinymis
 | Erro de sintaxe ou incompatibilidade ao compilar | Versão diferente do compilador usado no projeto | Confira `typst --version` e compile com Typst `0.15.1`. |
 | Preview não atualiza | Tinymist não instalado | Instale `myriad-dreamin.tinymist` e recarregue o VS Code. |
 | Bibliografia não aparece | `bibliografia: none`, `.bib` vazio ou nenhuma citação no texto | Passe `bibliografia: read("referencias.bib")`, cite as obras no texto e adicione `#references()` no final. |
+| Erros `label <...> does not exist` ou `cannot reference heading without numbering` ao editar um capítulo | Falta `#show: capitulo.with(numero: N)` no topo do capítulo | Adicione a linha logo após o `#import` — ver [Editando um capítulo sozinho](#editando-um-capítulo-sozinho). |
+| Erro `path ... would escape the project root` | A raiz do projeto é a pasta `capitulos/` | Abra no editor a pasta do TCC, ou use `--root .` na linha de comando. |
 | Referência `@fig-...` aparece em vermelho | Label não existe ou typo | Verifique `<fig-...>` e `@fig-...` com mesmo nome. |
 | Ficha catalográfica em branco | Caminho errado ou PDF de exemplo | Use sua ficha catalográfica final no parâmetro `ficha-catalografica`; o arquivo `assets/ficha-exemplo.pdf` é apenas ilustrativo. |
 | Erro `codly` | `codly-habilitado: false` com `#codigo` | `codly-habilitado` agora é `true` por padrão; se desabilitou, reative. |

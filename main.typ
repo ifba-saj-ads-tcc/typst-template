@@ -1,240 +1,78 @@
+// main.typ — documento principal do TCC (IFBA campus Santo Antônio de Jesus, ADS).
+//
+// Este arquivo só guarda (1) os dados do trabalho e (2) a ordem das partes do documento.
+// O texto fica em arquivos separados:
+//   pre-textuais/   resumo, abstract, dedicatória, agradecimentos, epígrafe, errata
+//   capitulos/      um arquivo por capítulo (01-introducao.typ ... 06-consideracoes-finais.typ)
+//   pos-textuais/   apêndices (material do aluno) e anexos (material de terceiros)
+//   assets/         figuras, diagramas, gráficos, códigos e algoritmos citados no texto
+//   data/           dados em CSV usados em tabelas
+//
+// Cada capítulo traz caixas #orientacao[...] com o que a seção DEVE e NÃO DEVE conter e
+// exemplos dos recursos do template. Apague as caixas e os exemplos à medida que escrever.
+//
+// Caminhos de arquivo: passe sempre image("...") nos parâmetros abaixo. Um caminho em texto
+// ("assets/x.pdf") é resolvido a partir da pasta ifbasaj-tcc/ e não é encontrado.
+
 #import "ifbasaj-tcc/imports.typ": *
-#import "assets/diagramas/arquitetura.typ": arquitetura
-#import "assets/graficos/pizza.typ": pizza
-#import "assets/graficos/barras.typ": barras
-#import "@preview/sourcecraft:0.1.0": source-diagram
+
 #show: template.with(
-  titulo: "Desenvolvimento de um Sistema de TCC Autogerado para o IFBA SAJ",
-  autor: "Sandro de Souza",
-  orientador: "Prof. Dr. Orientador do IFBA",
-  data-banca: datetime(year: 2026, month: 8, day: 04),
-  resumo-conteudo: [Este trabalho apresenta exemplo completo do pacote ifba-saj-tcc com todas as funcionalidades ABNT.],
-  resumo-palavras: ("Typst", "TCC", "ABNT", "IFBA"),
-  abstract-conteudo: [This work presents a complete example of the ifba-saj-tcc package.],
-  abstract-palavras: ("Typst", "Thesis", "ABNT", "IFBA"),
-  dedicatoria: [Dedico à comunidade de software livre de SAJ.],
-  agradecimentos: [Agradeço aos professores do IFBA.],
-  epigrafe: [A simplicidade é a sofisticação máxima. \ — Leonardo da Vinci],
-  ficha-catalografica: image("assets/ficha-exemplo.pdf", width: 100%, height: 100%, fit: "contain"),
-  errata: [Elemento opcional para versão corrigida, depois de depositada.],
-  // texto-aprovacao: none → auto-gerado (let _texto-aprovacao-pad); ou forneça content/str custom
+  // ── Identificação (obrigatórios) ────────────────────────────────────────────
+  titulo: "Título do Trabalho de Conclusão de Curso",
+  autor: "Nome Completo do Aluno",
+  orientador: "Prof. Dr. Nome do Orientador",
+  // co-orientador: "Prof. Me. Nome do Coorientador",
+  data-banca: datetime(year: 2026, month: 12, day: 10),
+  // O primeiro membro é o orientador (marcado como tal na folha de aprovação).
   banca: (
-    [Prof. Dr. (IFBA)],
-    [Prof. Dr. (IFBA)],
-    [Prof. Dr. (IFBA)],
+    [Prof. Dr. Nome do Orientador (IFBA)],
+    [Prof. Me. Nome do Avaliador 1 (IFBA)],
+    [Prof. Me. Nome do Avaliador 2 (IFBA)],
   ),
+
+  // ── Instituição (os padrões já são do IFBA SAJ / ADS) ──────────────────────
+  // instituicao: [Instituto Federal de Educação, Ciência e Tecnologia da Bahia],
+  // curso: [Análise e Desenvolvimento de Sistemas],
+  // local: "Santo Antônio de Jesus",
+  // logo: image("assets/imagens/logo.svg", width: 2.7cm), // sem logo: moldura tracejada
+
+  // ── Pré-textuais ────────────────────────────────────────────────────────────
+  // Ficha catalográfica: emitida pela biblioteca do campus; troque o PDF de exemplo.
+  ficha-catalografica: image("assets/ficha-exemplo.pdf", width: 100%, height: 100%, fit: "contain"),
+  // Folha de aprovação: none = gerada a partir de titulo/autor/banca/data-banca.
+  // Depois da defesa, use a folha assinada digitalizada:
+  // texto-aprovacao: image("assets/folha-aprovacao-assinada.pdf", width: 100%, height: 100%, fit: "contain"),
+  // errata: include "pre-textuais/errata.typ", // só na versão corrigida, pós-depósito
+  dedicatoria: include "pre-textuais/dedicatoria.typ",
+  agradecimentos: include "pre-textuais/agradecimentos.typ",
+  epigrafe: include "pre-textuais/epigrafe.typ",
+  resumo-conteudo: include "pre-textuais/resumo.typ",
+  resumo-palavras: ("Palavra-chave 1", "Palavra-chave 2", "Palavra-chave 3"),
+  abstract-conteudo: include "pre-textuais/abstract.typ",
+  abstract-palavras: ("Keyword 1", "Keyword 2", "Keyword 3"),
+
+  // ── Referências e saída ─────────────────────────────────────────────────────
   bibliografia: read("referencias.bib"),
-  versao-impressao: false,
+  versao-impressao: false, // true = margens espelhadas e capítulos em página ímpar
+  // codly-habilitado: true, // destaque de sintaxe em #codigo e #algoritmo
 )
-= Introdução
 
-O #abbrev("ifba", long: "Instituto Federal da Bahia") campus SAJ e o curso de #abbrev("ads", long: "Análise e Desenvolvimento de Sistemas") são referência. O #abbrev("ifba") novamente. Como afirma #prose("martin2008"), o código limpo é essencial. O termo #gloss("microsserviços")[Estilo arquitetural com serviços independentes.] é central. O #gloss("docker")[Plataforma de containers.] também.
-
-#lorem(60)
-
-#figura(
-  image("assets/imagens/logo.svg"),
-  caption: [Logotipo IFBA],
-) <figura-logo>
-
-#lorem(60)
-
-== Contextualização
-
-#figura(
-  source-diagram(
-    (
-      read("assets/codigos/Estoque.java"),
-      read("assets/codigos/Produto.java"),
-    ).join("\n\n"),
-    grammar: "java",
-    max-height: 8cm,
-  ),
-  caption: [Relação Produtos e Estoque],
-) <figura-source>
-
-#lorem(60)
-
-Ver @figura-logo e @figura-arquitetura.
-
-#lorem(60)
-
-#figura(
-  arquitetura,
-  caption: [Arquitetura de microsserviços],
-) <figura-arquitetura>
-
-#lorem(60)
-
-#tabela(
-  caption: [Métricas sob carga],
-  align: (left, center, center),
-  width: 75%,
-  columns: (1fr, 2fr, 1.5fr),
-  header: ([Módulo], [Tempo de Resposta (ms)], [Uso de CPU (%)]),
-  ..csv("data/resultados.csv"),
-) <tabela-resultados>
-
-#lorem(20)
-#tabela(
-  caption: [Métricas novas sob carga],
-  align: (left, center, center),
-  columns: (1fr, 1fr, 1fr),
-  header: ([Módulo], [Tempo de Resposta (ms)], [Uso de CPU (%)]),
-  [Autenticação],
-  table.cell(rowspan: 2, align: center + horizon, stroke: 1pt)[1200],
-  [12.4],
-  [Busca],
-  [45.8],
-  [Relatórios],
-  [3500],
-  [88.1],
-  [Notificações],
-  table.cell(colspan: 2, stroke: 1pt)[24.7],
-) <tabela-resultados-novo>
-
-#lorem(20)
-
-#align(center)[
-  #table(
-    columns: (auto, 1fr, 1fr),
-    // Define a largura das colunas
-    align: (left, center, center),
-    // Alinhamento do texto
-    stroke: none,
-    // Remove todas as bordas padrão (grades)
-
-    // Adiciona as linhas horizontais estilo IBGE manualmente
-    table.hline(stroke: 1.5pt),
-    // Top rule (linha grossa superior)
-    [Item], [Quantidade], [Preço],
-    table.hline(stroke: 0.8pt),
-    // Mid rule (linha média sob o cabeçalho)
-
-    [Produto A], [10], [R\$ 15,00],
-    [Produto B], [5], [R\$ 30,00],
-    [Produto C], [2], [R\$ 120,00],
-
-    table.hline(stroke: 1.5pt),
-    // Bottom rule (linha grossa inferior)
-  )
-]
-
-
-#quadro(
-  ([Critério], [PostgreSQL], [MongoDB], [Modelo], [Relacional], [Documentos]),
-  caption: [Comparativo SGBDs],
-) <quadro-sgbd>
-
-
-#lorem(60)
-
-== Citações — Exemplos Nativos ABNT (NBR 10520:2023)
-
-#lorem(30)
-
-=== Indireta parentética (ao final da frase)
-
-A arquitetura de microsserviços é amplamente adotada na indústria #cite("newman2021").#lorem(30)
-
-Várias fontes confirmam essa tendência #cite("martin2008", "sommerville2011").#lorem(30)
-
-
-=== Indireta narrativa (autor no fluxo do texto)
-
-Como afirma #prose("martin2008"), o código limpo é essencial. #lorem(30)
-
-
-Segundo #prose("sommerville2011"), a engenharia de software é disciplina madura.#lorem(30)
-
-
-=== Com localizador (página)
-
-A modularização é defendida #cite("martin2008", supplement: [p. 42]).#lorem(30)
-
-Na forma narrativa com página: #cite("sommerville2011", supplement: [p. 18]) destaca a importância.#lorem(30)
-
-
-=== Múltiplas fontes
-
-Estudos recentes apontam convergência #cite("martin2008", "sommerville2011", "newman2021").#lorem(30)
-
-=== Só autor / só ano (via prose + referência)
-
-#lorem(30) O autor citado é #prose("newman2021"). // nativo equivalente a form:author/year seria custom
-
-=== Direta curta (até 3 linhas, aspas + citação)
-
-#lorem(30) Segundo o autor, #citacao-curta[código limpo é legível e simples] #cite("martin2008", supplement: [p. 42]).
-
-=== Direta longa (>3 linhas, recuo 4cm, 10pt)
-
-#citacao-longa(
-  autor: "Martin",
-  ano: "2009",
-  pagina: "42",
-)[O código é limpo se for legível e simples. Ele não deve conter duplicações. Deve expressar claramente suas intenções e conter o mínimo de dependências possíveis para facilitar a manutenção e evolução do sistema ao longo do tempo.]
-
-#lorem(30) A arquitetura é relevante #cite("newman2021").
-
-=== Código e Algoritmo (para referência cruzada)
-
-Exemplo de code inline `manifest.json` com formatação específica. #lorem(30) A @figura-codigo mostra código real.
-
-#codigo(
-  lang: "javascript",
-  caption: [Servidor Express],
-  filename: "server.js",
-  read("assets/codigos/server.js"),
-) <figura-codigo>
-
-#lorem(30) O algoritmo é o @algoritmo-busca.
-
-#algoritmo(read("assets/algoritmos/busca.alg"), caption: [Busca linear]) <algoritmo-busca>
-
-#lorem(30)
-
-#figura(pizza, caption: [Distribuição linguagens]) <figura-grafico>
-
-#lorem(30) Texto com nota#footnote[Nota explicativa.].
-
-#figura(barras, caption: [Distribuição linguagens em barras]) <figura-barras>
-
-
-#equacao[$ e^(i pi) + 1 = 0 $] <eq-euler>
-
-#lorem(30) Ver @figura-arquitetura e @eq-euler.
-
-#figura(
-  image("assets/diagramas/diagramauml.svg"),
-  caption: [Imagem gerada pelo PlantUML ],
-) <figura-puml>
-
-
-#references()
-
-#glossario()
-
-#apendice
-
-= Roteiro de Entrevistas
-
-Conteúdo do apêndice A. #lorem(280)
-
-== Seção interna apêndice
-
-Texto.#lorem(280)
-
-= Novo Apendice
-
-#lorem(30)
-
-#anexo
-
-= Portaria de Autorização
-
-Conteúdo do anexo A.#lorem(280)
-
-= Novo anexo
-
-#lorem(300)
+// ── Textuais ──────────────────────────────────────────────────────────────────
+// Comente um include para compilar sem o capítulo (ex.: capítulos ainda não escritos).
+#include "capitulos/01-introducao.typ"
+#include "capitulos/02-referencial-teorico.typ"
+#include "capitulos/03-metodologia.typ"
+#include "capitulos/04-desenvolvimento.typ"
+#include "capitulos/05-resultados.typ"
+#include "capitulos/06-consideracoes-finais.typ"
+
+// ── Pós-textuais (ordem NBR 14724) ────────────────────────────────────────────
+#references()  // só lista obras citadas no texto
+#glossario()   // gerado pelos #gloss do texto; some se não houver termos
+
+#apendice      // a partir daqui, "= Título" vira "Apêndice A – Título"
+#include "pos-textuais/apendice-a-roteiro.typ"
+#include "pos-textuais/apendice-b-codigo-fonte.typ"
+
+#anexo         // a partir daqui, "= Título" vira "Anexo A – Título"
+#include "pos-textuais/anexo-a-portaria.typ"

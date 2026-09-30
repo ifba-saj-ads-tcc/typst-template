@@ -7,10 +7,12 @@
 #import "elements.typ": figura, quadro, tabela, fonte, myself
 #import "bibliography.typ": cite, prose, references, register-bib, citacao-curta, citacao-longa
 #import "code-algo.typ": codigo, algoritmo
-#import "diagrams.typ": diagram
+#import "diagrams.typ": diagram, cetz
+#import "charts.typ": chart
 #import "gloss.typ": abbrev, gloss, lista-abreviaturas, glossario
 #import "annexes.typ": apendice, anexo
-#import "editor-tools.typ": equacao, figura-equacao
+#import "capitulo.typ": capitulo
+#import "editor-tools.typ": equacao, figura-equacao, orientacao
 #import "config.typ": get-autor, get-titulo, get-ano, get-orientador, get-curso, get-cidade, get-config
 
 // Reexportações públicas.

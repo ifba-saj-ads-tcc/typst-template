@@ -119,7 +119,10 @@
 
 #let _name-parts(raw) = {
   let nm = raw.trim()
-  if "," in nm {
+  // Autor institucional entre chaves duplas no .bib: author = {{Typst GmbH}}.
+  if nm.starts-with("{") and nm.ends-with("}") {
+    (nm.trim("{").trim("}").trim(), "")
+  } else if "," in nm {
     let p = nm.split(",")
     (p.at(0).trim(), p.slice(1).join(",").trim())
   } else {
@@ -136,7 +139,7 @@
   let np = _name-parts(raw)
   let fam = upper(np.at(0))
   let ini = _initials(np.at(1))
-  if ini == "" { fam } else { fam + ", " + ini }
+  if ini == none or ini == "" { fam } else { fam + ", " + ini }
 }
 
 #let _authors-bib(field) = _split-authors(field).map(_format-name).join("; ")
@@ -150,7 +153,11 @@
 
 #let _cite-authors(field, caixa: "upper", narrativo: false) = {
   let fams = _families(field)
-  let aplica = if caixa == "upper" { f => upper(f) } else { f => _titlecase(f) }
+  // Narrativa: mantém a grafia do .bib (McClelland, Typst GmbH); só normaliza nomes
+  // escritos todo em maiúsculas ou todo em minúsculas.
+  let aplica = if caixa == "upper" { f => upper(f) } else {
+    f => if f == upper(f) or f == lower(f) { _titlecase(f) } else { f }
+  }
   if fams.len() == 0 {
     []
   } else if fams.len() > 3 {
@@ -325,8 +332,10 @@
     let out = [#_dot(aut) #emph(_g(f, "title"))]
     let ed = _edition(f)
     if ed != none { out += [. #ed] }
+    // "9. ed." já termina em ponto: não duplicar antes do local.
+    let sep = if ed != none and ed.ends-with(".") { [ ] } else { [. ] }
     if t == "book" {
-      out += [. #_pub-addr(f)]
+      out += sep + [#_pub-addr(f)]
       if yr != "" { out += [, #yr] }
     } else {
       let addr = _g(f, "address")
@@ -343,7 +352,7 @@
     out += [#emph(_g(f, "booktitle"))]
     let ed = _edition(f)
     if ed != none { out += [. #ed] }
-    out += [. #_pub-addr(f)]
+    out += if ed != none and ed.ends-with(".") { [ #_pub-addr(f)] } else { [. #_pub-addr(f)] }
     if yr != "" { out += [, #yr] }
     if _g(f, "pages") != "" { out += [, p. #_endash(_g(f, "pages"))] }
     out += [.]

@@ -9,7 +9,11 @@
   if abbrev-key in cur {
     upper(abbrev-key)
   } else {
-    if long == none { panic("abbrev: long required on first use for '" + abbrev-key + "'") }
+    if long == none {
+      // Capítulo aberto sozinho: a 1ª ocorrência pode estar em outro capítulo.
+      if heading.numbering == none { return upper(abbrev-key) }
+      panic("abbrev: long required on first use for '" + abbrev-key + "'")
+    }
     _abbrev-state.update(s => { s.insert(abbrev-key, (long: long)); s })
     [#long (#upper(abbrev-key))]
   }

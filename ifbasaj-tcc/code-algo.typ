@@ -10,12 +10,18 @@
     let ano = if cfg.year == none { "ano" } else { cfg.year }
     [_Elaborado pelo próprio autor (#ano)._]
   }
+  let _linha(body) = {
+    set text(size: 10pt)
+    set par(first-line-indent: 0pt, justify: false)
+    v(3pt, weak: true)
+    align(center, [Fonte#" – "#body])
+  }
   if src == none {
-    _self()
+    none
   } else if src == auto {
-    _self()
+    _linha(_self())
   } else {
-    [Fonte#" – "#src]
+    _linha(src)
   }
 }
 

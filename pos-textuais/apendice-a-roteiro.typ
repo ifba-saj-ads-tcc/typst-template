@@ -1,6 +1,7 @@
-// assets/apendices/roteiro.typ — Conteúdo do apêndice A (autoria própria).
+// pos-textuais/apendice-a-roteiro.typ — Apêndice A. Apêndice = material elaborado pelo próprio
+// aluno. A letra (A, B, ...) é atribuída pela ordem de inclusão no main.typ.
 
-= Roteiro de Entrevistas
+= Roteiro de entrevistas <apx-roteiro>
 
 O roteiro a seguir foi aplicado aos gestores de TI do campus.
 

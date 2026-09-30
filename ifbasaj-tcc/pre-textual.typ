@@ -214,7 +214,7 @@
     set par(first-line-indent: 0pt, spacing: 18pt)
     resumo-conteudo
     parbreak()
-    [Palavras-chave: #(resumo-palavras.join(". ")).]
+    [Palavras-chave: #(resumo-palavras.join("; ")).]
   })
   _fim-de-folha()
   _pre-titulo[ABSTRACT]
@@ -223,7 +223,7 @@
     set text(lang: "en")
     abstract-conteudo
     parbreak()
-    [Keywords: #(abstract-palavras.join(". ")).]
+    [Keywords: #(abstract-palavras.join("; ")).]
   })
   _fim-de-folha()
   // Lista pré-textual: renderiza título + outline apenas se houver itens.

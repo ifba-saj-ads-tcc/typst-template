@@ -116,6 +116,8 @@
   set par(leading: _abnt.leading, spacing: _abnt.leading, first-line-indent: (amount: _abnt.indent, all: true), justify: true)
   set heading(numbering: (..nums) => if nums.pos().len() <= 3 { numbering("1.1.1", ..nums.pos()) })
   set math.equation(numbering: "(1)")
+  // @rótulo de capítulo escreve "Capítulo N"; de seção, "Seção N.N".
+  show heading.where(level: 1): set heading(supplement: [Capítulo])
   set figure(gap: 0.6em)
   set figure.caption(separator: _cm-dash, position: top)
   show figure.caption: it => {
@@ -148,7 +150,7 @@
 // Fim de folha de um elemento pré-textual: no modo impressão, o próximo
 // elemento inicia no anverso (página ímpar); no digital, quebra fraca.
 #let _fim-de-folha() = context {
-  if get-config().at("print", default: false) { pagebreak(to: "odd") } else { pagebreak(weak: true) }
+  if get-config().at("versao-impressao", default: false) { pagebreak(to: "odd") } else { pagebreak(weak: true) }
 }
 
 // Títulos de seção: nível 1 em negrito com quebra de folha; níveis 2 e 3 em
@@ -161,7 +163,7 @@
       // com _fim-de-folha anterior (sem brancos duplos).
       let primaria = it.numbering != none or it.outlined == true
       if primaria {
-        if get-config().at("print", default: false) {
+        if get-config().at("versao-impressao", default: false) {
           pagebreak(weak: true, to: "odd")
         } else {
           pagebreak(weak: true)

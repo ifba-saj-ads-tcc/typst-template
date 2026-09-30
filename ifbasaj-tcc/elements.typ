@@ -20,9 +20,9 @@
 }
 
 #let _render-source(src) = if src == none {
-  _self-source()
+  none
 } else if src == auto {
-  _self-source()
+  _src(_self-source())
 } else {
   _src(src)
 }
@@ -54,11 +54,14 @@
   cells,
   caption: none,
   source: auto,
+  columns: auto,
+  align: auto,
 ) = {
   figure(
     {
       table(
-        columns: auto,
+        columns: columns,
+        align: align,
         stroke: 0.5pt,
         inset: (x: 6pt, y: 3pt),
         ..cells,
@@ -99,8 +102,7 @@
         ..rows.pos().flatten(),
         table.hline(stroke: 1.5pt),
       )
-      ],
-      
+      ]
       #_render-source(source)]
     },
     caption: caption,
