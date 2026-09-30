@@ -17,6 +17,7 @@
     )[IFBA]),
   ))
 }
+#let _logo() = image("../assets/logo.png", height: 2.7cm) 
 #let _capa(logo, instituicao, autor, titulo, local, data) = {
   set align(center)
   set par(leading: 1.1em, first-line-indent: 0pt, justify: false)

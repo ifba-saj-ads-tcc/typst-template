@@ -9,7 +9,7 @@
 #import "../assets/diagramas/arquitetura.typ": arquitetura
 #import "@preview/sourcecraft:0.1.0": source-diagram
 
-= Desenvolvimento do software <cap-desenvolvimento>
+= Desenvolvimento (do software) <cap-desenvolvimento>
 
 #orientacao[
   Descreva o que foi feito, com decisões técnicas justificadas. Listagens longas de
