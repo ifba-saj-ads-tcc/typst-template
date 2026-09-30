@@ -68,8 +68,9 @@ Ver @figura-logo e @figura-arquitetura.
 
 #tabela(
   caption: [Métricas sob carga],
-  align: (left, center, right),
-  columns: (1fr, 1fr, 1fr),
+  align: (left, center, center),
+  width: 75%,
+  columns: (1fr, 2fr, 1.5fr),
   header: ([Módulo], [Tempo de Resposta (ms)], [Uso de CPU (%)]),
   ..csv("data/resultados.csv"),
 ) <tabela-resultados>

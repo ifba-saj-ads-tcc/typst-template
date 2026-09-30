@@ -93,8 +93,6 @@
   versao-impressao: false,
   codly-habilitado: true,
   bibliografia: none,
-  referencias-titulo: "REFERÊNCIAS",
-  cor-links: _text-color,
   body,
 ) = {
   assert(ficha-catalografica != none, message: "Parâmetro obrigatório ABNT ausente: ficha-catalografica")

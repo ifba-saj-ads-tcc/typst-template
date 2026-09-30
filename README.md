@@ -1,14 +1,14 @@
-# ifba-saj-tcc — Modelo ABNT para TCC do IFBA SAJ (ADS)
+# Template de TCC — IFBA SAJ (ADS)
 
 [![Typst](https://img.shields.io/badge/Typst-0.15.1-239DAD?logo=typst)](https://typst.app) [![Tinymist](https://img.shields.io/badge/VS%20Code-Tinymist-007ACC?logo=visualstudiocode)](https://marketplace.visualstudio.com/items?itemName=myriad-dreamin.tinymist) [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-Modelo ABNT para Trabalho de Conclusão de Curso do **IFBA — campus Santo Antônio de Jesus**, curso **Análise e Desenvolvimento de Sistemas (ADS)**, implementado como pacote [Typst](https://typst.app). Atende às normas **NBR 14724**, **NBR 10520:2023** e **NBR 6023**.
+Template de documento [Typst](https://typst.app) para Trabalho de Conclusão de Curso do **IFBA — campus Santo Antônio de Jesus**, curso **Análise e Desenvolvimento de Sistemas (ADS)**. O arquivo de entrada é `main.typ`; `ifbasaj-tcc/imports.typ` reúne as funções de formatação usadas pelo modelo. A estrutura segue as normas **NBR 14724**, **NBR 10520:2023** e **NBR 6023:2018**; confirme eventuais exigências adicionais com o curso.
 
-> **Compiler pinado:** `0.15.1` (ver `typst.toml:compiler`). Use a mesma versão para evitar incompatibilidades.
+> **Versão do compilador usada no projeto:** Typst `0.15.1`. Use essa versão para reproduzir a compilação do exemplo.
 
 ## Sumário
 
-- [ifba-saj-tcc — Modelo ABNT para TCC do IFBA SAJ (ADS)](#ifba-saj-tcc--modelo-abnt-para-tcc-do-ifba-saj-ads)
+- [Template de TCC — IFBA SAJ (ADS)](#template-de-tcc--ifba-saj-ads)
   - [Sumário](#sumário)
   - [O que é](#o-que-é)
   - [Pré-requisitos](#pré-requisitos)
@@ -32,9 +32,9 @@ Modelo ABNT para Trabalho de Conclusão de Curso do **IFBA — campus Santo Ant�
 
 ## O que é
 
-- Este Repositório é um projeto Typst  que formata automaticamente capa, folha de rosto, ficha catalográfica, errata, folha de aprovação, dedicatória, agradecimentos, epígrafe, resumos, listas automáticas (figuras, quadros, tabelas, códigos, algoritmos, equações, abreviaturas) e sumário conforme ABNT.
-- Exemplo completo e compilável em `main.typ` (variantes digital e impressão).
-- Dependências `@preview`: `codly`, `codly-languages`, `cetz`, `cetz-plot`.
+- Este repositório fornece um modelo editável que formata capa, folha de rosto, ficha catalográfica, errata, folha de aprovação, dedicatória, agradecimentos, epígrafe, resumos, listas e sumário.
+- `main.typ` é um exemplo completo e compilável; altere seus dados e conteúdo para escrever o TCC.
+- O modelo usa dependências da galeria Typst `@preview` para código, diagramas, gráficos e formatação de datas; o exemplo também demonstra diagramas e gráficos locais em `assets/`.
 
 ## Pré-requisitos
 
@@ -71,7 +71,7 @@ typst --version
 # deve mostrar 0.15.1
 ```
 
-> Se a versão divergir de `typst.toml:compiler`, atualize/downgrade o Typst para `0.15.1`.
+> Se a versão divergir, instale ou selecione Typst `0.15.1` para reproduzir o PDF de exemplo.
 
 ### 2. VS Code + Tinymist
 
@@ -119,7 +119,7 @@ Também é possível editar e compilar direto no [Typst App](https://typst.app).
 ```powershell
 # 1. Clonar (ou use "Use this template" no GitHub)
 git clone <url-do-repo>
-Set-Location ifba-saj-tcc
+Set-Location typst-template
 
 # 2. Abrir no VS Code
 code .
@@ -130,7 +130,7 @@ typst compile main.typ
 ```
 
 - O arquivo para editar é `main.typ` — ele já contém um TCC de exemplo com todos os recursos.
-- Para começar seu TCC ou edite `main.typ` diretamente.
+- Para começar seu TCC, edite `main.typ` diretamente.
 
 ## O que preencher — `template.with(...)`
 
@@ -141,7 +141,7 @@ Todo o documento é configurado no cabeçalho de `main.typ`:
   titulo: "Seu título aqui",
   autor: "Seu Nome",
   orientador: "Prof. Dr. Nome do Orientador",
-  data-banca: "04/08/2026",
+  data-banca: datetime(year: 2026, month: 8, day: 4),
   // ... demais campos abaixo
 )
 ```
@@ -153,13 +153,13 @@ Todo o documento é configurado no cabeçalho de `main.typ`:
 | `titulo` | **sim** | `str` | — | Título do TCC (capa e folha de rosto). Renderizado em **CAIXA-ALTA** (NBR 14724). |
 | `autor` | **sim** | `str` | — | Nome do autor. Renderizado em **CAIXA-ALTA**. |
 | `orientador` | **sim** | `str` | — | Nome do orientador (caixa normal, NBR 14724). |
-| `data-banca` | **sim** | `str` | — | Data da banca (ex: `"04/08/2026"`). Ano é derivado automaticamente para capa/folha; data completa vai na folha de aprovação. |
+| `data-banca` | **sim** | `datetime` | — | Data da banca (ex.: `datetime(year: 2026, month: 8, day: 4)`). Ano é derivado automaticamente para capa/folha; data completa vai na folha de aprovação. |
 | `co-orientador` | não | `str`/`content` | `none` | Co-orientador. |
 | `instituicao` | não | `content` | `Instituto Federal de Educação, Ciência e Tecnologia da Bahia` | Instituição na capa. Renderizada em **CAIXA-ALTA**. |
 | `curso` | não | `content` | `Análise e Desenvolvimento de Sistemas` | Curso (usado no preâmbulo e folha de aprovação). |
 | `local` | não | `str` | `Santo Antônio de Jesus` | Cidade. Renderizada em **CAIXA-ALTA**. |
 | `logo` | não | `str`/`content`/`none` | Placeholder tracejado | Logo da capa (`"caminho/logo.png"` ou `image(...)`). |
-| `ficha-catalografica` | **sim** | `str`/`content` | — | Ficha catalográfica — `image("assets/ficha.pdf")` ou `"assets/ficha.pdf"`. Gera página no verso da folha de rosto. |
+| `ficha-catalografica` | **sim** | `str`/`content` | — | Ficha catalográfica — `image("assets/ficha-exemplo.pdf")` ou um caminho para seu próprio PDF. Gera página no verso da folha de rosto. |
 | `errata` | não | `content`/`none` | `none` | Errata (opcional, pós-depósito). |
 | `texto-aprovacao` | não | `str`/`content`/`none` | `none` (auto-gerado) | Folha de aprovação. Se `none`, é **gerada automaticamente** a partir de `titulo`/`autor`/`banca`/`local`/`data-banca` (formato ABNT); se `str`, imagem em página cheia; se `content`, usa o fornecido. |
 | `banca` | **sim** | `array[content]` | — | Membros da banca. Primeiro é marcado como (Orientador) na versão auto-gerada. |
@@ -172,9 +172,7 @@ Todo o documento é configurado no cabeçalho de `main.typ`:
 | `abstract-palavras` | **sim** | `array[str]` | — | Keywords do abstract. |
 | `versao-impressao` | não | `bool` | `false` | `false` = digital, `true` = impressão (margens ABNT). |
 | `codly-habilitado` | não | `bool` | `true` | Habilita `codly` para blocos de código. |
-| `bibliografia` | **sim** | `bytes` | — | `read("referencias.bib")` (BibLaTeX). |
-| `referencias-titulo` | não | `str` | `REFERÊNCIAS` | Título da seção de referências. |
-| `cor-links` | não | `color` | `_text-color` | Cor dos links. |
+| `bibliografia` | **sim** | `bytes` | — | Conteúdo de um arquivo `.bib`, por exemplo `read("referencias.bib")`; o template interpreta um subconjunto de BibTeX. |
 
 > `ficha-catalografica` aceita **caminho** (`str`) ou **conteúdo** (`image(...)`).
 
@@ -183,15 +181,15 @@ Todo o documento é configurado no cabeçalho de `main.typ`:
 ### Exemplo mínimo copiável
 
 ```typst
-#import "../lib.typ": *
+#import "ifbasaj-tcc/imports.typ": *
 
 #show: template.with(
   titulo: "Meu TCC",
   autor: "João Silva",
   orientador: "Prof. Dr. Maria Souza",
-  data-banca: "04/08/2026",
+  data-banca: datetime(year: 2026, month: 8, day: 4),
   banca: ([Prof. Me. Fulano - IFBA], [Prof. Dr. Ciclano - IFBA]),
-  ficha-catalografica: image("assets/ficha.pdf", width: 100%, height: 100%, fit: "contain"),
+  ficha-catalografica: image("assets/ficha-exemplo.pdf", width: 100%, height: 100%, fit: "contain"),
   resumo-conteudo: [Resumo do trabalho...],
   resumo-palavras: ("Palavra1", "Palavra2"),
   abstract-conteudo: [Abstract...],
@@ -206,7 +204,7 @@ Seu texto aqui...
 
 ## Escrevendo seu TCC
 
-API pública reexportada por `lib.typ` — todos os exemplos abaixo têm contrapartida em `main.typ`.
+Funções de formatação reexportadas por `ifbasaj-tcc/imports.typ` — os exemplos abaixo usam os arquivos do template.
 
 ### Figuras, tabelas, quadros
 
@@ -222,20 +220,19 @@ Ver @fig-logo e @tab-metricas.
 ### Código e algoritmo
 
 ```typst
-#codigo(lang: "javascript", caption: [Servidor Express], filename: "server.js", read("assets/codigos/server.js")) <fig-codigo>
+#codigo(lang: "java", caption: [Classe Estoque], filename: "Estoque.java", read("assets/codigos/Estoque.java")) <fig-codigo>
 #algoritmo(read("assets/algoritmos/busca.alg"), caption: [Busca linear]) <alg-busca>
 ```
 
-Ativos de exemplo: `assets/codigos/server.js`, `assets/algoritmos/busca.alg`. Requer `codly-habilitado: true` para syntax highlight.
+Ativos de exemplo: `assets/codigos/Estoque.java`, `assets/codigos/Produto.java` e `assets/algoritmos/busca.alg`. Requer `codly-habilitado: true` para syntax highlight.
 
 ### Equações e diagramas
 
 ```typst
 #equacao[$ e^(i pi) + 1 = 0 $] <eq-euler>
-#diagram(caption: [Arquitetura], ...) // ver ifbasaj-tcc/diagrams.typ
 ```
 
-Gráficos: `assets/graficos/pizza.typ`, `assets/graficos/barras.typ` (via `cetz-plot`).
+Diagramas e gráficos de exemplo: `assets/diagramas/arquitetura.typ`, `assets/diagramas/diagramauml.svg`, `assets/graficos/pizza.typ` e `assets/graficos/barras.typ`.
 
 ### Citações ABNT (NBR 10520:2023)
 
@@ -262,7 +259,7 @@ Segundo o autor, #citacao-curta[código limpo é legível] #cite("martin2008", s
 #references()
 ```
 
-Fonte: `ifbasaj-tcc/bibliography.typ` (`cite`, `prose`, `citacao-curta`, `citacao-longa`, `references`). Arquivo bib: `referencias.bib`.
+Fonte: `ifbasaj-tcc/bibliography.typ` (`cite`, `prose`, `citacao-curta`, `citacao-longa`, `references`). O arquivo `referencias.bib` é lido pelo parser BibTeX do template; use `#references(title: "REFERÊNCIAS")` para imprimir as obras citadas.
 
 ### Abreviaturas, glossário, apêndices e anexos
 
@@ -303,9 +300,23 @@ Recompile após trocar: `typst compile main.typ` ou aguarde o preview do Tinymis
 
 ```
 .
-├── typst.toml               # manifesto (name, version, compiler = 0.15.1)
+├── main.typ                 # ← arquivo de entrada e exemplo — edite aqui
+├── main.pdf                 # PDF compilado do exemplo
+├── referencias.bib
+├── data/
+│   └── resultados.csv
+├── assets/
+│   ├── algoritmos/busca.alg
+│   ├── anexos/portaria.typ
+│   ├── apendices/roteiro.typ
+│   ├── codigos/{Estoque.java,Produto.java}
+│   ├── diagramas/{arquitetura.typ,diagramauml.puml,diagramauml.svg}
+│   ├── graficos/{barras.typ,pizza.typ}
+│   ├── imagens/logo.svg
+│   ├── ficha-exemplo.{pdf,typ}
+│   └── folha-aprovacao-exemplo.{pdf,typ}
 ├── ifbasaj-tcc/
-│   ├── imports.typ          # entrypoint público — reexporta ifbasaj-tcc/*.typ
+│   ├── imports.typ          # funções de formatação usadas pelo template
 │   ├── layout.typ           # página, tipografia, headings ABNT
 │   ├── pre-textual.typ      # template() — capa, folha de rosto, listas, sumário
 │   ├── elements.typ         # figura, quadro, tabela, fonte
@@ -317,24 +328,19 @@ Recompile após trocar: `typst compile main.typ` ou aguarde o preview do Tinymis
 │   ├── annexes.typ          # apendice, anexo
 │   ├── editor-tools.typ     # equacao
 │   └── config.typ           # get-autor, get-titulo, ...
-├── 
-│   ├── main.typ             # ← edite aqui — exemplo completo
-│   ├── referencias.bib
-│   ├── glossary.typ
-│   ├── assets/{imagens,codigos,diagramas,graficos,anexos,apendices}
-│   └── data/resultados.csv
-└── .vscode/extensions.json  # recomenda Tinymist + PlantUML
+└── .vscode/
+    └── extensions.json      # recomenda Tinymist + PlantUML
 ```
 
 ## FAQ / Troubleshooting
 
 | Problema | Causa | Solução |
 |---|---|---|
-| `error: package requires typst 0.15.1` | Versão incompatível | `typst --version` e instale `0.15.1` (`typst.toml:compiler`). |
+| Erro de sintaxe ou incompatibilidade ao compilar | Versão diferente do compilador usado no projeto | Confira `typst --version` e compile com Typst `0.15.1`. |
 | Preview não atualiza | Tinymist não instalado | Instale `myriad-dreamin.tinymist` e recarregue o VS Code. |
-| Bibliografia não aparece | `bibliografia: none` ou `.bib` vazio | Passe `bibliografia: read("referencias.bib")` e adicione `#references()` no final. |
+| Bibliografia não aparece | `bibliografia: none`, `.bib` vazio ou nenhuma citação no texto | Passe `bibliografia: read("referencias.bib")`, cite as obras no texto e adicione `#references()` no final. |
 | Referência `@fig-...` aparece em vermelho | Label não existe ou typo | Verifique `<fig-...>` e `@fig-...` com mesmo nome. |
-| Ficha catalográfica em branco | Caminho errado | Use `ficha-catalografica: image("assets/ficha.pdf", width: 100%, height: 100%, fit: "contain")` com caminho relativo a `main.typ`. |
+| Ficha catalográfica em branco | Caminho errado ou PDF de exemplo | Use sua ficha catalográfica final no parâmetro `ficha-catalografica`; o arquivo `assets/ficha-exemplo.pdf` é apenas ilustrativo. |
 | Erro `codly` | `codly-habilitado: false` com `#codigo` | `codly-habilitado` agora é `true` por padrão; se desabilitou, reative. |
 
 ---
