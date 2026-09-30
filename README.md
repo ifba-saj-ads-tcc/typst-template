@@ -296,10 +296,27 @@ Fonte: `ifbasaj-tcc/gloss.typ` (`abbrev`, `gloss`, `lista-abreviaturas`, `glossa
 
 Recompile após trocar: `typst compile main.typ` ou aguarde o preview do Tinymist.
 
+## PDF automático no GitHub (Actions + Release)
+
+O workflow `.github/workflows/pdf.yml` compila o `main.typ` com Typst 0.15.1 no GitHub:
+
+- **push na `main`, pull request ou execução manual** (aba Actions → *PDF do TCC* → *Run workflow*):
+  o PDF fica disponível em *Artifacts* na página da execução. Serve para conferir que o texto compila.
+- **push de uma tag `v*`**: cria uma **Release** com o PDF anexado, com notas geradas a partir dos commits.
+
+```powershell
+git tag v0.1.0            # ex.: versão para a qualificação
+git push origin v0.1.0
+```
+
+Tags com hífen (`v1.0.0-rc1`, `v0.2-banca`) são publicadas como pré-release. Se o TCC ficar em
+`docs/TCC` de um repositório de projeto, altere `TCC_DIR` no início do workflow.
+
 ## Estrutura de pastas
 
 ```
 .
+├── .github/workflows/pdf.yml # compila o PDF e publica Release em tags v*
 ├── main.typ                 # ← dados do trabalho + ordem dos includes (não tem texto)
 ├── referencias.bib          # exemplos de cada tipo BibTeX suportado
 ├── pre-textuais/            # resumo, abstract, dedicatória, agradecimentos, epígrafe, errata

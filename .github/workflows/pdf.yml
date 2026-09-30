@@ -1,0 +1,64 @@
+# Compila o TCC com Typst e publica o PDF.
+#
+# - push na main / pull request / execução manual: compila e guarda o PDF como artefato
+#   da execução (aba Actions → execução → Artifacts). Serve para conferir que o texto compila.
+# - push de tag v*: além disso, cria uma Release com o PDF anexado.
+#     git tag v1.0.0 && git push origin v1.0.0
+#   Tags com hífen (v1.0.0-rc1, v0.3-qualificacao) viram pré-release.
+#
+# Em um repositório de projeto em que o TCC fica em docs/TCC, troque TCC_DIR para docs/TCC.
+
+name: PDF do TCC
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write # necessário para criar a Release
+
+env:
+  TCC_DIR: .
+  TYPST_VERSION: 0.15.1 # mesma versão indicada no README
+
+jobs:
+  pdf:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: typst-community/setup-typst@v5
+        with:
+          typst-version: ${{ env.TYPST_VERSION }}
+
+      - name: Nome do PDF
+        id: nome
+        run: |
+          if [ "${{ github.ref_type }}" = "tag" ]; then
+            versao="${{ github.ref_name }}"
+          else
+            versao="$(git rev-parse --short HEAD)"
+          fi
+          echo "arquivo=${{ github.event.repository.name }}-${versao}.pdf" >> "$GITHUB_OUTPUT"
+
+      - name: Compilar
+        working-directory: ${{ env.TCC_DIR }}
+        run: typst compile main.typ "$GITHUB_WORKSPACE/${{ steps.nome.outputs.arquivo }}"
+
+      - name: Guardar PDF como artefato
+        uses: actions/upload-artifact@v4
+        with:
+          name: pdf-tcc
+          path: ${{ steps.nome.outputs.arquivo }}
+          if-no-files-found: error
+
+      - name: Criar Release
+        if: github.ref_type == 'tag'
+        uses: softprops/action-gh-release@v3
+        with:
+          files: ${{ steps.nome.outputs.arquivo }}
+          prerelease: ${{ contains(github.ref_name, '-') }}
+          generate_release_notes: true
