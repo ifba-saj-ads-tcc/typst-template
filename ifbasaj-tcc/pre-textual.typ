@@ -1,6 +1,7 @@
 // pre-textual.typ — classic-ppgsi order, ABNT header, capa/folha correct
 #import "layout.typ": default-theme, _abnt-page, _abnt-body, _abnt-headings, _backmatter, _cm-dash, _fim-de-folha, _text-color
 #import "config.typ": get-config, set-config
+#import "genero.typ": flexao, validar-genero
 #import "gloss.typ": glossario, lista-abreviaturas
 #import "bibliography.typ": cite, references, register-bib
 #import "code-algo.typ": init-codly
@@ -17,7 +18,7 @@
     )[IFBA]),
   ))
 }
-#let _logo() = image("../assets/logo.png", height: 2.7cm) 
+//#let _logo() = image("../assets/logo.png", height: 2.7cm) 
 #let _capa(logo, instituicao, autor, titulo, local, data) = {
   set align(center)
   set par(leading: 1.1em, first-line-indent: 0pt, justify: false)
@@ -39,7 +40,7 @@
   set par(leading: 0.65em, spacing: 0.65em)
   body
 }
-#let _folha-de-rosto(autor, titulo, preambulo, orientador, coorientador, local, data) = {
+#let _folha-de-rosto(autor, titulo, preambulo, orientador, orientador-rotulo, coorientador, coorientador-rotulo, local, data) = {
   set align(center)
   set par(leading: 1.1em, first-line-indent: 0pt, justify: false)
   set text(size: 12pt)
@@ -52,10 +53,10 @@
     set par(justify: true, leading: 0.65em, spacing: 1.3em)
     preambulo
     v(2em)
-    [#orientador]
+    [#(orientador-rotulo): #orientador]
     if coorientador != none {
       v(0.5em)
-      [#coorientador]
+      [#(coorientador-rotulo): #coorientador]
     }
   })))
   v(1fr)
@@ -73,8 +74,11 @@
 #let template(
   titulo: none,
   autor: none,
+  autor-genero: "m",
   orientador: none,
+  orientador-genero: "m",
   co-orientador: none,
+  co-orientador-genero: "m",
   instituicao: [Instituto Federal de Educação, Ciência e Tecnologia da Bahia],
   curso: [Análise e Desenvolvimento de Sistemas],
   local: "Santo Antônio de Jesus",
@@ -104,10 +108,14 @@
   assert(abstract-conteudo != none, message: "Parâmetro obrigatório ABNT ausente: abstract-conteudo")
   assert(abstract-palavras.len() > 0, message: "Parâmetro obrigatório ABNT ausente: abstract-palavras")
   assert(bibliografia != none, message: "Parâmetro obrigatório ABNT ausente: bibliografia")
+  validar-genero(autor-genero, "autor-genero")
+  validar-genero(orientador-genero, "orientador-genero")
+  validar-genero(co-orientador-genero, "co-orientador-genero")
   let _ano = data-banca.year()
   set-config(
     year: _ano,
     author: autor,
+    autor-genero: autor-genero,
     titulo: titulo,
     orientador: orientador,
     curso: curso,
@@ -116,22 +124,25 @@
   )
   let _logo-val = if logo == none { _logo() } else if type(logo) == str { image(logo, width: 2.7cm) } else { logo }
   let _author-upper = if autor == none { none } else { upper(str(autor)) }
+  let _orientador-rotulo = flexao(orientador-genero, "Orientador", "Orientadora")
+  let _coorientador-rotulo = flexao(co-orientador-genero, "Coorientador", "Coorientadora")
+  let _grau = flexao(autor-genero, "Tecnólogo", "Tecnóloga")
   // Preâmbulo parametrizado: compõe a partir de instituicao/curso/local (ABNT folha de rosto).
-  let _preamb = [Trabalho de Conclusão de Curso apresentado a #instituicao, campus #local, como requisito parcial para obtenção do grau de Tecnólogo em #curso.]
+  let _preamb = [Trabalho de Conclusão de Curso apresentado a #instituicao, campus #local, como requisito parcial para obtenção do grau de #_grau em #curso.]
   // Texto de aprovação parametrizado (estratégia let _preamb): montado a partir de autor/titulo/banca/local/ano/instituicao/curso.
   let _texto-aprovacao-pad = {
     let _autor-upper = upper(str(autor))
     let _titulo-upper = upper(str(titulo))
     let _ass = banca.enumerate().map(((i, m)) => {
       let is-orientador = i == 0
-      stack(dir: ttb, spacing: 2pt, line(length: 10cm, stroke: 0.5pt), text(weight: "bold", m), if is-orientador { text(size: 10pt, [Orientador]) } else { none })
+      stack(dir: ttb, spacing: 2pt, line(length: 10cm, stroke: 0.5pt), text(weight: "bold", m), if is-orientador { text(size: 10pt, _orientador-rotulo) } else { none })
     }).join(v(1.2cm))
     stack(dir: ttb, spacing: 0pt,
       align(center, text(weight: "bold", _autor-upper)),
       v(2cm),
       align(center, text(weight: "bold", _titulo-upper)),
       v(1.5cm),
-      par(justify: true, leading: 0.65em, [A banca examinadora, abaixo listada, aprova o Trabalho de Conclusão de Curso #_titulo-upper elaborado por #_author-upper como requisito parcial para obtenção do grau de Tecnólogo em #curso, pelo #instituicao.]),
+      par(justify: true, leading: 0.65em, [A banca examinadora, abaixo listada, aprova o Trabalho de Conclusão de Curso #_titulo-upper elaborado por #_author-upper como requisito parcial para obtenção do grau de #_grau em #curso, pelo #instituicao.]),
       v(1cm),
       align(center, [#local, #display-date(data-banca, pattern: "full")]),
       v(1cm),
@@ -165,7 +176,7 @@
   _fim-de-folha()
   // A contagem recomeça após a capa: a folha de rosto é a folha 1.
   counter(page).update(1)
-  _folha-de-rosto(_author-upper, titulo, _preamb, orientador, co-orientador, local, _ano)
+  _folha-de-rosto(_author-upper, titulo, _preamb, orientador, _orientador-rotulo, co-orientador, _coorientador-rotulo, local, _ano)
   // Ficha catalográfica no verso da folha de rosto (NBR 14724) — obrigatória.
   pagebreak()
   _ficha(ficha-catalografica)

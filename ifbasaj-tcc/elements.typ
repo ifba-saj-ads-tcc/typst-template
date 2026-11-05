@@ -1,6 +1,7 @@
 // elements.typ — Figuras, Quadros e Tabelas com atribuição automática de fonte.
 
 #import "config.typ": get-config
+#import "genero.typ": fonte-autoral
 
 #let _cm-dash = " – "
 
@@ -16,7 +17,8 @@
 #let _self-source() = context {
   let cfg = get-config()
   let ano = if cfg.year == none { "ano" } else { cfg.year }
-  [_Elaborado pelo próprio autor (#ano)._]
+  let genero = cfg.at("autor-genero", default: "m")
+  fonte-autoral(genero, ano)
 }
 
 #let _render-source(src) = if src == none {
@@ -29,7 +31,12 @@
 
 // Linha "Fonte" exposta publicamente (source: none remove).
 #let fonte = _src
-#let myself = context { let cfg = get-config(); let ano = if cfg.year == none { "ano" } else { cfg.year }; [_Elaborado pelo próprio autor (#ano)._] }
+// Conteúdo de fonte reutilizável: funciona como `#myself` e como `source: myself`.
+#let myself = context {
+  let cfg = get-config()
+  let ano = if cfg.year == none { "ano" } else { cfg.year }
+  fonte-autoral(cfg.at("autor-genero", default: "m"), ano)
+}
 
 // 📸 Figura — caption acima, fonte abaixo.
 #let figura(

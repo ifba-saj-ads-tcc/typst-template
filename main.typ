@@ -19,13 +19,16 @@
 #show: template.with(
   // ── Identificação (obrigatórios) ────────────────────────────────────────────
   titulo: "Título do Trabalho de Conclusão de Curso",
-  autor: "Nome Completo do Aluno",
-  orientador: "Prof. Dr. Nome do Orientador",
+  autor: "Nome Completo da Aluna",
+  autor-genero: "f", // "m" (padrão) ou "f"
+  orientador: "Profa. Dra. Nome da Orientadora",
+  orientador-genero: "f", // "m" (padrão) ou "f"
   // co-orientador: "Prof. Me. Nome do Coorientador",
+  // co-orientador-genero: "m", // "m" (padrão) ou "f"
   data-banca: datetime(year: 2026, month: 12, day: 10),
-  // O primeiro membro é o orientador (marcado como tal na folha de aprovação).
+  // O primeiro membro é o orientador/orientadora; o rótulo segue orientador-genero.
   banca: (
-    [Prof. Dr. Nome do Orientador (IFBA)],
+    [Profa. Dra. Nome da Orientadora (IFBA)],
     [Prof. Me. Nome do Avaliador 1 (IFBA)],
     [Prof. Me. Nome do Avaliador 2 (IFBA)],
   ),
@@ -34,7 +37,7 @@
   // instituicao: [Instituto Federal de Educação, Ciência e Tecnologia da Bahia],
   // curso: [Análise e Desenvolvimento de Sistemas],
   // local: "Santo Antônio de Jesus",
-  // logo: image("assets/imagens/logo.svg", width: 2.7cm), // sem logo: moldura tracejada
+  logo: image("./assets/logo.png", height: 2.7cm) , // sem logo: moldura tracejada
 
   // ── Pré-textuais ────────────────────────────────────────────────────────────
   // Ficha catalográfica: emitida pela biblioteca do campus; troque o PDF de exemplo.

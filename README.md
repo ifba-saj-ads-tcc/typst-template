@@ -172,7 +172,9 @@ Todo o documento é configurado no cabeçalho de `main.typ`:
 #show: template.with(
   titulo: "Seu título aqui",
   autor: "Seu Nome",
+  autor-genero: "m", // "m" (padrão) ou "f"
   orientador: "Prof. Dr. Nome do Orientador",
+  orientador-genero: "m", // "m" (padrão) ou "f"
   data-banca: datetime(year: 2026, month: 8, day: 4),
   // ... demais campos abaixo
 )
@@ -184,9 +186,12 @@ Todo o documento é configurado no cabeçalho de `main.typ`:
 |---|---|---|---|---|
 | `titulo` | **sim** | `str` | — | Título do TCC (capa e folha de rosto). Renderizado em **CAIXA-ALTA** (NBR 14724). |
 | `autor` | **sim** | `str` | — | Nome do autor. Renderizado em **CAIXA-ALTA**. |
+| `autor-genero` | não | `str` | `"m"` | Gênero do autor: `"m"` ou `"f"`. Controla `Tecnólogo`/`Tecnóloga` e a frase de autoria das fontes. |
 | `orientador` | **sim** | `str` | — | Nome do orientador (caixa normal, NBR 14724). |
+| `orientador-genero` | não | `str` | `"m"` | Gênero do orientador: `"m"` ou `"f"`. Controla `Orientador`/`Orientadora` na folha de rosto e no rótulo de `banca[0]`. |
 | `data-banca` | **sim** | `datetime` | — | Data da banca (ex.: `datetime(year: 2026, month: 8, day: 4)`). Ano é derivado automaticamente para capa/folha; data completa vai na folha de aprovação. |
 | `co-orientador` | não | `str`/`content` | `none` | Co-orientador. |
+| `co-orientador-genero` | não | `str` | `"m"` | Gênero do coorientador: `"m"` ou `"f"`. Afeta apenas a folha de rosto. |
 | `instituicao` | não | `content` | `Instituto Federal de Educação, Ciência e Tecnologia da Bahia` | Instituição na capa. Renderizada em **CAIXA-ALTA**. |
 | `curso` | não | `content` | `Análise e Desenvolvimento de Sistemas` | Curso (usado no preâmbulo e folha de aprovação). |
 | `local` | não | `str` | `Santo Antônio de Jesus` | Cidade. Renderizada em **CAIXA-ALTA**. |
@@ -194,7 +199,7 @@ Todo o documento é configurado no cabeçalho de `main.typ`:
 | `ficha-catalografica` | **sim** | `str`/`content` | — | Ficha catalográfica — `image("assets/ficha-exemplo.pdf")` ou um caminho para seu próprio PDF. Gera página no verso da folha de rosto. |
 | `errata` | não | `content`/`none` | `none` | Errata (opcional, pós-depósito). |
 | `texto-aprovacao` | não | `str`/`content`/`none` | `none` (auto-gerado) | Folha de aprovação. Se `none`, é **gerada automaticamente** a partir de `titulo`/`autor`/`banca`/`local`/`data-banca` (formato ABNT); se `str`, imagem em página cheia; se `content`, usa o fornecido. |
-| `banca` | **sim** | `array[content]` | — | Membros da banca. Primeiro é marcado como (Orientador) na versão auto-gerada. |
+| `banca` | **sim** | `array[content]` | — | Membros da banca. Primeiro é marcado como `Orientador`/`Orientadora` (conforme `orientador-genero`) na versão auto-gerada. |
 | `dedicatoria` | não | `content`/`none` | `none` | Dedicatória. |
 | `agradecimentos` | não | `content`/`none` | `none` | Agradecimentos. |
 | `epigrafe` | não | `content`/`none` | `none` | Epígrafe. |
@@ -208,7 +213,9 @@ Todo o documento é configurado no cabeçalho de `main.typ`:
 
 > `ficha-catalografica` aceita **caminho** (`str`) ou **conteúdo** (`image(...)`).
 
-> **Preâmbulo e folha de aprovação são gerados automaticamente** (estratégia `let _preamb`): o preâmbulo compõe `"Trabalho de Conclusão de Curso apresentado a #instituicao, campus #local, como requisito parcial para obtenção do grau de Tecnólogo em #curso."` e a folha de aprovação monta nome/título em caixa-alta, parágrafo da banca e `local` + `data-banca` + `Comissão Examinadora` + assinaturas.
+> **Gênero.** `autor-genero`, `orientador-genero` e `co-orientador-genero` aceitam `"m"` (padrão) ou `"f"`. O default masculino preserva a saída de documentos já existentes; para uma orientadora, use `orientador-genero: "f"`, e para uma aluna, `autor-genero: "f"`. `autor-genero` também controla a frase `Elaborado pelo próprio autor`/`Elaborado pela própria autora` nas fontes e em `myself`. O coorientador não recebe rótulo na folha de aprovação.
+
+> **Preâmbulo e folha de aprovação são gerados automaticamente** (estratégia `let _preamb`): o preâmbulo compõe `"Trabalho de Conclusão de Curso apresentado a #instituicao, campus #local, como requisito parcial para obtenção do grau de Tecnólogo/Tecnóloga em #curso."` (conforme `autor-genero`) e a folha de aprovação monta nome/título em caixa-alta, parágrafo da banca e `local` + `data-banca` + `Comissão Examinadora` + assinaturas.
 
 ### Exemplo mínimo copiável
 
@@ -217,10 +224,14 @@ Todo o documento é configurado no cabeçalho de `main.typ`:
 
 #show: template.with(
   titulo: "Meu TCC",
-  autor: "João Silva",
-  orientador: "Prof. Dr. Maria Souza",
+  autor: "Maria Silva",
+  autor-genero: "f",
+  orientador: "Profa. Dra. Maria Souza",
+  orientador-genero: "f",
+  // co-orientador: "Prof. Me. João Lima",
+  // co-orientador-genero: "m",
   data-banca: datetime(year: 2026, month: 8, day: 4),
-  banca: ([Prof. Me. Fulano - IFBA], [Prof. Dr. Ciclano - IFBA]),
+  banca: ([Profa. Dra. Maria Souza - IFBA], [Prof. Dr. Ciclano - IFBA]),
   ficha-catalografica: image("assets/ficha-exemplo.pdf", width: 100%, height: 100%, fit: "contain"),
   resumo-conteudo: [Resumo do trabalho...],
   resumo-palavras: ("Palavra1", "Palavra2"),

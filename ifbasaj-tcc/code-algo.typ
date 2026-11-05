@@ -1,6 +1,7 @@
 // code-algo.typ — Exibição de código-fonte (codly) e algoritmos estruturados.
 
 #import "config.typ": get-config
+#import "genero.typ": fonte-autoral
 #import "@preview/codly:1.3.0": *
 #import "@preview/codly-languages:0.1.1": *
 
@@ -8,7 +9,8 @@
   let _self() = context {
     let cfg = get-config()
     let ano = if cfg.year == none { "ano" } else { cfg.year }
-    [_Elaborado pelo próprio autor (#ano)._]
+    let genero = cfg.at("autor-genero", default: "m")
+    fonte-autoral(genero, ano)
   }
   let _linha(body) = {
     set text(size: 10pt)

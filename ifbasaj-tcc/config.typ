@@ -1,9 +1,10 @@
 // config.typ — Estado global compartilhado do documento.
-#let _config = state("ifba-saj-config", (year: none, author: none, titulo: none, orientador: none, curso: none, cidade: none, versao-impressao: false))
-#let set-config(year: none, author: none, titulo: none, orientador: none, curso: none, cidade: none, versao-impressao: false) = {
+#let _config = state("ifba-saj-config", (year: none, author: none, autor-genero: "m", titulo: none, orientador: none, curso: none, cidade: none, versao-impressao: false))
+#let set-config(year: none, author: none, autor-genero: none, titulo: none, orientador: none, curso: none, cidade: none, versao-impressao: false) = {
   _config.update(c => (
     year: if year == none { c.year } else { year },
     author: if author == none { c.author } else { author },
+    autor-genero: if autor-genero == none { c.at("autor-genero", default: "m") } else { autor-genero },
     titulo: if titulo == none { c.at("titulo", default: none) } else { titulo },
     orientador: if orientador == none { c.at("orientador", default: none) } else { orientador },
     curso: if curso == none { c.at("curso", default: none) } else { curso },
